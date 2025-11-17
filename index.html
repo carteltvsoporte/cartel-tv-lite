@@ -2,321 +2,79 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CTVL</title>
-  <meta name="description" content="Versión Lite de CTVL - Descubre películas y series" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>CTVL - Versión Lite</title>
+  <meta name="description" content="Versión Lite de CTVL - Descubre películas y series con acceso limitado" />
   <link rel="icon" href="https://github.com/carteltvsoporte/ctvl/raw/refs/heads/main/TV.jpeg" type="image/jpeg">
-  <style>
-    :root {
-      --primary: #2563eb;
-      --bg: #0f172a;
-      --bg-elevated: #1e293b;
-      --card-bg: #1e293b;
-      --text: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --border: #334155;
-      --radius: 8px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-      line-height: 1.5;
-    }
-
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(15, 23, 42, 0.95);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      padding: 1rem;
-    }
-
-    .modal-content {
-      background: var(--card-bg);
-      padding: 1.5rem;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      max-width: 400px;
-      width: 100%;
-      text-align: center;
-    }
-
-    .modal-content h2 {
-      margin-bottom: 1rem;
-      color: var(--primary);
-    }
-
-    .modal-content p {
-      margin-bottom: 1.5rem;
-      color: var(--text-secondary);
-    }
-
-    .modal-content button {
-      width: 100%;
-      padding: 0.75rem;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 1rem;
-      margin-top: 0.5rem;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 1rem;
-    }
-
-    .app-header {
-      background: var(--bg-elevated);
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 0;
-      margin-bottom: 1.5rem;
-    }
-
-    .header-content {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    .logo-img {
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      object-fit: cover;
-    }
-
-    .logo-text {
-      font-size: 1.2rem;
-    }
-
-    .content-section {
-      margin-bottom: 2rem;
-    }
-
-    .section-header {
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    .section-header h2 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .section-header p {
-      color: var(--text-secondary);
-    }
-
-    .categories {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .category-section {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
-    }
-
-    .category-title {
-      font-size: 1.1rem;
-      margin-bottom: 0.75rem;
-      color: var(--primary);
-    }
-
-    .filters {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .filter-btn {
-      padding: 0.5rem 1rem;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text-secondary);
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-
-    .filter-btn.active {
-      background: var(--primary);
-      color: white;
-      border-color: transparent;
-    }
-
-    .action-btn {
-      width: 100%;
-      padding: 1rem;
-      background: var(--primary);
-      border: none;
-      border-radius: var(--radius);
-      color: white;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-bottom: 1.5rem;
-    }
-
-    .action-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .movie-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    .movie-poster {
-      width: 100%;
-      max-width: 250px;
-      aspect-ratio: 2/3;
-      object-fit: cover;
-      border-radius: var(--radius);
-      margin: 0 auto 1rem;
-      display: block;
-      border: 1px solid var(--border);
-    }
-
-    .movie-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-
-    .movie-overview {
-      color: var(--text-secondary);
-      line-height: 1.5;
-      margin-top: 1rem;
-    }
-
-    .usage-info {
-      text-align: center;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      margin-top: 1rem;
-    }
-
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem;
-      z-index: 10000;
-      max-width: 300px;
-      transform: translateX(400px);
-      transition: transform 0.3s ease;
-    }
-
-    .notification.show {
-      transform: translateX(0);
-    }
-
-    .notification-close {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      cursor: pointer;
-      color: var(--text-secondary);
-      float: right;
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 0.5rem;
-      }
-      
-      .filters {
-        gap: 0.25rem;
-      }
-      
-      .filter-btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-      }
-      
-      .movie-card {
-        padding: 1rem;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Modal de bienvenida -->
   <div id="premium-modal" class="modal">
     <div class="modal-content">
-      <h2>Versión Limitada</h2>
-      <p>Esta es la versión Lite de CTVL con restricciones de uso.</p>
-      <p>Para una experiencia completa sin límites, accede a la versión Premium:</p>
-      <button id="premium-link">Ir a CTVP Premium</button>
-      <button id="continue-lite">Continuar en Lite</button>
+      <h2>🎬 Bienvenido a CTVL Lite</h2>
+      <p>Esta es la <strong>versión gratuita con restricciones</strong> de uso.</p>
+      <div class="premium-features">
+        <h3>Con CTV Premium obtienes:</h3>
+        <ul>
+          <li>✅ Acceso ilimitado</li>
+          <li>✅ Sin publicidad</li>
+          <li>✅ Contenido exclusivo</li>
+          <li>✅ Calidad máxima</li>
+          <li>✅ Soporte prioritario</li>
+        </ul>
+      </div>
+      <div class="modal-buttons">
+        <button id="premium-link" class="btn-premium">Ir a CTV Premium</button>
+        <button id="continue-lite" class="btn-lite">Continuar en Lite</button>
+      </div>
+      <p class="modal-note">Puedes cambiar a Premium en cualquier momento</p>
     </div>
   </div>
 
+  <!-- Modal CAPTCHA -->
+  <div id="captcha-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Verificación de seguridad</h2>
+      <p>Confirma que eres humano para continuar</p>
+      <div class="captcha-container">
+        <div id="captcha-text" class="captcha-text"></div>
+        <input type="text" id="captcha-input" placeholder="Ingresa el texto de arriba" maxlength="6">
+        <button id="captcha-submit" class="btn-premium">Verificar</button>
+      </div>
+      <p class="modal-note">Esta verificación ayuda a prevenir uso automatizado</p>
+    </div>
+  </div>
+
+  <!-- Notificaciones -->
   <div id="notification" class="notification hidden">
     <button id="notification-close" class="notification-close">×</button>
     <span id="notification-text"></span>
   </div>
 
+  <!-- Contenido principal -->
   <div class="container">
     <header class="app-header">
       <div class="header-content">
         <div class="logo">
           <img src="https://github.com/carteltvsoporte/ctvl/raw/refs/heads/main/TV.jpeg" alt="CTVL" class="logo-img">
-          <span class="logo-text">CTVL</span>
+          <span class="logo-text">CTVL Lite</span>
+        </div>
+        <div class="premium-badge">
+          <span class="badge-text">LITE</span>
+          <button id="upgrade-btn" class="btn-upgrade">Premium</button>
         </div>
       </div>
     </header>
 
     <div class="content-section">
       <div class="section-header">
-        <h2>CATEGORIAS</h2>
-        <p>Versión Lite</p>
+        <h2>CATEGORÍAS</h2>
+        <p>Versión Lite - Acceso limitado</p>
+        <div class="usage-counter">
+          <span id="usage-count">0/3</span> vistas disponibles
+          <span id="time-left" class="time-left"></span>
+        </div>
       </div>
 
       <div class="categories">
@@ -345,259 +103,18 @@
 
       <div id="movie-container" class="movie-card">
         <div class="welcome-message">
-          <h3>Bienvenido a CTVL</h3>
+          <h3>Bienvenido a CTVL Lite</h3>
           <p>Selecciona una categoría y haz clic en "Cargar Contenido" para descubrir</p>
+          <div class="premium-promo">
+            <p>¿Quieres acceso ilimitado?</p>
+            <button class="btn-premium-small">Obtener Premium</button>
+          </div>
           <p class="usage-info">Límite: 3 contenidos cada 15 minutos</p>
         </div>
       </div>
     </div>
   </div>
 
-  <script>
-    const CONFIG = {
-      TMDB_API_KEY: 'cdf9b6a0255cebc133ce4d9aaaee8d6d',
-      BASE_URL: 'https://api.themoviedb.org/3',
-      IMG_BASE_URL: 'https://image.tmdb.org/t/p/w500',
-      ACCESS_CODE: 'TV2025'
-    };
-
-    const State = {
-      currentType: 'now_playing',
-      viewCount: parseInt(localStorage.getItem('ctvl_view_count') || '0'),
-      lastViewTime: parseInt(localStorage.getItem('ctvl_last_view_time') || '0'),
-      isOnline: navigator.onLine
-    };
-
-    function setupPremiumModal() {
-      const premiumModal = document.getElementById('premium-modal');
-      const premiumLink = document.getElementById('premium-link');
-      const continueLite = document.getElementById('continue-lite');
-      
-      const hasSeenModal = localStorage.getItem('ctvl_seen_modal');
-      if (hasSeenModal === 'true') {
-        premiumModal.classList.add('hidden');
-        return;
-      }
-      
-      premiumLink.addEventListener('click', () => {
-        window.location.href = 'https://carteltvsoporte.github.io/ctvp/';
-      });
-      
-      continueLite.addEventListener('click', () => {
-        localStorage.setItem('ctvl_seen_modal', 'true');
-        premiumModal.classList.add('hidden');
-      });
-    }
-
-    function canViewContent() {
-      const now = Date.now();
-      const fifteenMinutes = 15 * 60 * 1000;
-      
-      // Si han pasado más de 15 minutos desde la última vista, reiniciar contador
-      if (now - State.lastViewTime > fifteenMinutes) {
-        State.viewCount = 0;
-        State.lastViewTime = now;
-        localStorage.setItem('ctvl_view_count', '0');
-        localStorage.setItem('ctvl_last_view_time', now.toString());
-        return true;
-      }
-      
-      // Si no ha alcanzado el límite de 3 vistas
-      if (State.viewCount < 3) {
-        return true;
-      }
-      
-      return false;
-    }
-
-    function incrementViewCount() {
-      State.viewCount++;
-      State.lastViewTime = Date.now();
-      localStorage.setItem('ctvl_view_count', State.viewCount.toString());
-      localStorage.setItem('ctvl_last_view_time', State.lastViewTime.toString());
-    }
-
-    function showNotification(message, duration = 3000) {
-      const notification = document.getElementById('notification');
-      const notificationText = document.getElementById('notification-text');
-      
-      if (!notification || !notificationText) return;
-      
-      notificationText.textContent = message;
-      notification.classList.remove('hidden');
-      notification.classList.add('show');
-      
-      setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.classList.add('hidden'), 300);
-      }, duration);
-    }
-
-    function setupNotifications() {
-      const closeBtn = document.getElementById('notification-close');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-          const notification = document.getElementById('notification');
-          notification.classList.remove('show');
-          setTimeout(() => notification.classList.add('hidden'), 300);
-        });
-      }
-    }
-
-    async function fetchContentByType(type) {
-      let language = 'es-ES';
-      let url = '';
-
-      switch (type) {
-        case 'now_playing':
-          url = `${CONFIG.BASE_URL}/movie/now_playing?api_key=${CONFIG.TMDB_API_KEY}&language=${language}&region=ES`;
-          break;
-        case 'popular_movies':
-          url = `${CONFIG.BASE_URL}/movie/popular?api_key=${CONFIG.TMDB_API_KEY}&language=${language}`;
-          break;
-        case 'top_rated_movies':
-          url = `${CONFIG.BASE_URL}/movie/top_rated?api_key=${CONFIG.TMDB_API_KEY}&language=${language}`;
-          break;
-        case 'on_the_air':
-          url = `${CONFIG.BASE_URL}/tv/on_the_air?api_key=${CONFIG.TMDB_API_KEY}&language=${language}`;
-          break;
-        case 'popular_tv':
-          url = `${CONFIG.BASE_URL}/tv/popular?api_key=${CONFIG.TMDB_API_KEY}&language=${language}`;
-          break;
-        case 'top_rated_tv':
-          url = `${CONFIG.BASE_URL}/tv/top_rated?api_key=${CONFIG.TMDB_API_KEY}&language=${language}`;
-          break;
-        default:
-          throw new Error('Tipo no soportado');
-      }
-
-      try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        const data = await response.json();
-        return data.results || [];
-      } catch (error) {
-        console.error(`Error fetching content for ${type}:`, error);
-        throw error;
-      }
-    }
-
-    function renderContent(item) {
-      const container = document.getElementById('movie-container');
-      if (!container) return;
-      
-      const title = item.title || item.name;
-      const dateField = item.release_date || item.first_air_date;
-      const year = dateField?.substring(0, 4) || 'N/A';
-      
-      container.innerHTML = `
-        <img src="${CONFIG.IMG_BASE_URL}${item.poster_path}" 
-             alt="${title}" 
-             class="movie-poster"
-             onerror="this.src='https://via.placeholder.com/250x375/1a1a25/6c757d?text=Sin+imagen'">
-        <div class="movie-title">${title} (${year})</div>
-        <p class="movie-overview">${item.overview?.trim() || 'Sin descripción disponible.'}</p>
-        <p class="usage-info">Vistas restantes: ${3 - State.viewCount} / 3 (cada 15 minutos)</p>
-      `;
-    }
-
-    function renderError(message) {
-      const container = document.getElementById('movie-container');
-      if (!container) return;
-      
-      container.innerHTML = `
-        <div class="error-content">
-          <h3>Error al cargar contenido</h3>
-          <p>${message}</p>
-          <p class="usage-info">Vistas restantes: ${3 - State.viewCount} / 3 (cada 15 minutos)</p>
-        </div>
-      `;
-    }
-
-    function renderLimitReached() {
-      const container = document.getElementById('movie-container');
-      if (!container) return;
-      
-      const now = Date.now();
-      const fifteenMinutes = 15 * 60 * 1000;
-      const timeLeft = State.lastViewTime + fifteenMinutes - now;
-      const minutesLeft = Math.ceil(timeLeft / 60000);
-      
-      container.innerHTML = `
-        <div class="limit-reached">
-          <h3>Límite de vistas alcanzado</h3>
-          <p>Has alcanzado el límite de 3 contenidos cada 15 minutos.</p>
-          <p>Podrás ver más contenido en aproximadamente ${minutesLeft} minutos.</p>
-          <p class="usage-info">Para acceso ilimitado, utiliza la versión Premium</p>
-          <button id="go-premium" class="action-btn" style="margin-top: 1rem;">Ir a Premium</button>
-        </div>
-      `;
-      
-      document.getElementById('go-premium').addEventListener('click', () => {
-        window.location.href = 'https://carteltvsoporte.github.io/ctvp/';
-      });
-    }
-
-    async function loadContent() {
-      if (!canViewContent()) {
-        renderLimitReached();
-        showNotification('Límite de vistas alcanzado. Intenta más tarde.');
-        return;
-      }
-
-      const btn = document.getElementById('load-btn');
-      const container = document.getElementById('movie-container');
-
-      if (btn) btn.disabled = true;
-      if (container) container.innerHTML = 'Cargando...';
-
-      try {
-        const items = await fetchContentByType(State.currentType);
-        if (items.length > 0) {
-          const randomIndex = Math.floor(Math.random() * items.length);
-          renderContent(items[randomIndex]);
-          incrementViewCount();
-          showNotification('Contenido cargado correctamente');
-        } else {
-          renderError('No se encontró contenido en esta categoría');
-        }
-      } catch (error) {
-        console.error('Error al cargar contenido:', error);
-        renderError(error.message || 'No se pudo cargar contenido. Verifica tu conexión.');
-      } finally {
-        if (btn) btn.disabled = false;
-      }
-    }
-
-    function setupFilters() {
-      const filterBtns = document.querySelectorAll('.filter-btn');
-      filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          if (btn.classList.contains('active')) return;
-          
-          filterBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          State.currentType = btn.dataset.type;
-          
-          showNotification(`Categoría: ${btn.textContent.trim()}`);
-        });
-      });
-    }
-
-    function initApp() {
-      setupPremiumModal();
-      setupNotifications();
-      setupFilters();
-      
-      const loadBtn = document.getElementById('load-btn');
-      if (loadBtn) {
-        loadBtn.addEventListener('click', () => loadContent());
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', initApp);
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
