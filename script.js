@@ -3,12 +3,12 @@ const CONFIG = {
   BASE_URL: 'https://api.themoviedb.org/3',
   IMG_BASE_URL: 'https://image.tmdb.org/t/p/w300', // Reducida calidad de imagen
   ACCESS_CODE: 'TV2025',
-  VIEW_LIMIT: 3,
-  TIME_LIMIT: 15 * 60 * 1000 // 15 minutos en milisegundos
+  VIEW_LIMIT: 5, // Cambiado de 3 a 5
+  TIME_LIMIT: 30 * 60 * 1000 // 30 minutos en milisegundos (cambiado de 15 a 30)
 };
 
 const State = {
-  currentType: 'now_playing',
+  currentType: 'popular_movies', // Cambiado a popular_movies por defecto
   viewCount: parseInt(localStorage.getItem('ctvl_view_count') || '0'),
   lastViewTime: parseInt(localStorage.getItem('ctvl_last_view_time') || '0'),
   isOnline: navigator.onLine,
@@ -164,7 +164,7 @@ function redirectToPremium() {
 function canViewContent() {
   const now = Date.now();
   
-  // Si han pasado más de 15 minutos desde la última vista, reiniciar contador
+  // Si han pasado más de 30 minutos desde la última vista, reiniciar contador
   if (now - State.lastViewTime > CONFIG.TIME_LIMIT) {
     State.viewCount = 0;
     State.lastViewTime = now;
@@ -174,7 +174,7 @@ function canViewContent() {
     return true;
   }
   
-  // Si no ha alcanzado el límite de 3 vistas
+  // Si no ha alcanzado el límite de 5 vistas
   if (State.viewCount < CONFIG.VIEW_LIMIT) {
     return true;
   }
@@ -191,7 +191,7 @@ function incrementViewCount() {
   updateUsageCounter();
   
   // Mostrar promoción después de cierto uso
-  if (State.viewCount === 2 && State.premiumPromoShown < 2) {
+  if (State.viewCount === 3 && State.premiumPromoShown < 2) {
     setTimeout(() => {
       showPremiumPromo();
     }, 1500);
@@ -289,23 +289,11 @@ async function fetchContentByType(type) {
   let url = '';
 
   switch (type) {
-    case 'now_playing':
-      url = `${CONFIG.BASE_URL}/movie/now_playing?api_key=${CONFIG.TMDB_API_KEY}&language=${language}&region=ES`;
-      break;
     case 'popular_movies':
       url = `${CONFIG.BASE_URL}/movie/popular?api_key=${CONFIG.TMDB_API_KEY}&language=${language}`;
       break;
-    case 'top_rated_movies':
-      url = `${CONFIG.BASE_URL}/movie/top_rated?api_key=${CONFIG.TMDB_API_KEY}&language=${language}`;
-      break;
-    case 'on_the_air':
-      url = `${CONFIG.BASE_URL}/tv/on_the_air?api_key=${CONFIG.TMDB_API_KEY}&language=${language}`;
-      break;
     case 'popular_tv':
       url = `${CONFIG.BASE_URL}/tv/popular?api_key=${CONFIG.TMDB_API_KEY}&language=${language}`;
-      break;
-    case 'top_rated_tv':
-      url = `${CONFIG.BASE_URL}/tv/top_rated?api_key=${CONFIG.TMDB_API_KEY}&language=${language}`;
       break;
     default:
       throw new Error('Tipo no soportado');
@@ -324,7 +312,7 @@ async function fetchContentByType(type) {
   }
 }
 
-// Renderizado de contenido (simplificado)
+// Renderizado de contenido (sin imágenes)
 function renderContent(item) {
   const container = document.getElementById('movie-container');
   if (!container) return;
@@ -332,21 +320,20 @@ function renderContent(item) {
   const title = item.title || item.name;
   const dateField = item.release_date || item.first_air_date;
   const year = dateField?.substring(0, 4) || 'N/A';
-  const posterUrl = item.poster_path ? `${CONFIG.IMG_BASE_URL}${item.poster_path}` : 
-    'https://via.placeholder.com/200x300/1a1a25/6c757d?text=Sin+imagen';
   
   // Descripción simplificada
   const overview = item.overview?.trim() || 'Sin descripción disponible.';
   const shortOverview = overview.length > 120 ? overview.substring(0, 120) + '...' : overview;
   
   container.innerHTML = `
-    <img src="${posterUrl}" 
-         alt="${title}" 
-         class="movie-poster">
+    <div class="no-image-placeholder">
+      <span>🎬</span>
+      <p>Imagen no disponible en versión Lite</p>
+    </div>
     <div class="movie-title">${title} (${year})</div>
     <p class="movie-overview">${shortOverview}</p>
     <div class="premium-promo">
-      <p>¿Te gusta lo que ves? Disfruta de contenido ilimitado</p>
+      <p>¿Te gusta lo que ves? Disfruta de contenido completo con imágenes</p>
       <button class="btn-premium-small">Obtener Premium</button>
     </div>
     <p class="usage-info">Vistas restantes: ${CONFIG.VIEW_LIMIT - State.viewCount} / ${CONFIG.VIEW_LIMIT}</p>
@@ -385,7 +372,7 @@ function renderLimitReached() {
   container.innerHTML = `
     <div class="limit-reached">
       <h3>Límite de vistas alcanzado</h3>
-      <p>Has alcanzado el límite de ${CONFIG.VIEW_LIMIT} contenidos cada 15 minutos.</p>
+      <p>Has alcanzado el límite de ${CONFIG.VIEW_LIMIT} contenidos cada 30 minutos.</p>
       <p>Podrás ver más contenido en aproximadamente ${minutesLeft} minutos.</p>
       <div class="premium-promo">
         <p>¿No quieres esperar? Obtén acceso ilimitado ahora</p>

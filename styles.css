@@ -328,15 +328,31 @@ body {
   text-align: center;
 }
 
-.movie-poster {
+/* Placeholder para contenido sin imágenes */
+.no-image-placeholder {
   width: 100%;
   max-width: 200px;
   aspect-ratio: 2/3;
-  object-fit: cover;
+  background: var(--bg);
+  border: 2px dashed var(--border);
   border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   margin: 0 auto 1rem;
-  display: block;
-  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.no-image-placeholder span {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.no-image-placeholder p {
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 0 0.5rem;
 }
 
 .movie-title {
